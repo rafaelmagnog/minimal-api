@@ -10,20 +10,19 @@ namespace Test.Domain.Entidades;
 [TestClass]
 public class AdministradorServiceTest
 {
-    private DbContexto CriarContextoDeTeste()
-    {
-        var assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        var path = Path.GetFullPath(Path.Combine(assemblyPath ?? "", "..", "..", ".."));
+private DbContexto CriarContextoDeTeste()
+{
+    // Caminho relativo: Test -> (subir 4 níveis) -> Api
+    var caminhoApi = Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\..\Api");
 
-        var builder = new ConfigurationBuilder()
-            .SetBasePath(path ?? Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .AddEnvironmentVariables();
+    var config = new ConfigurationBuilder()
+        .SetBasePath(caminhoApi)
+        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+        .Build();
 
-        var configuration = builder.Build();
+    return new DbContexto(config);
+}
 
-        return new DbContexto(configuration);
-    }
 
     [TestMethod]
     public void TestandoSalvarAdministrador()
